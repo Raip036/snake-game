@@ -4,7 +4,18 @@ from constants import *
 import random
 
 class Snake:
-    pass
+    def __init__(self):
+        self.body_size = BODY_PARTS
+        self.coords = []
+        self.squares = []
+
+        for i in range (0,BODY_PARTS):
+            self.coords.append([0,0])
+
+        for x,y in self.coords:
+            square = canvas.create_rectangle(x,y,x+SPACE_SIZE,y+SPACE_SIZE, fill=SNAKE_COLOUR,tag="snake")
+            self.squares.append(square)
+
 
 
 
@@ -22,8 +33,34 @@ class Food:
         canvas.create_oval(x,y, x+SPACE_SIZE, y+SPACE_SIZE, fill=FOOD_COLOUR,tag="food")
 
 
-def next_turn():
-    pass
+def next_turn(snake, food):
+    
+    x,y = snake.coords[0]
+    if direction == "up":
+        y -= SPACE_SIZE
+
+    elif direction == "down":
+        y += SPACE_SIZE
+
+    elif direction == "left":
+        x -= SPACE_SIZE
+
+    elif direction == "right":
+        x += SPACE_SIZE
+
+    
+
+    snake.coords.insert(0, (x,y))
+    square = canvas.create_rectangle(x,y,x+SPACE_SIZE,y+SPACE_SIZE,fill=SNAKE_COLOUR)
+    
+    snake.squares.insert(0,square)
+    del snake.coords[-1]
+    canvas.delete(snake.squares[-1])
+
+    del snake.squares[-1]
+
+    window.after(SPEED,next_turn,snake,food)
+
 
 def change_direction():
     pass
@@ -61,6 +98,8 @@ window.geometry(f"{window_width}x{window_height}+{x}+{y}")
 
 snake = Snake()
 food = Food()
+
+next_turn(snake,food)
 
 
 
